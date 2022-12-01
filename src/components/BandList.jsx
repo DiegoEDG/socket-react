@@ -1,23 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-export const BandList = () => {
+export const BandList = ({ data, voteBand, removeBand }) => {
+	const [bands, setbands] = useState(data);
+
+	useEffect(() => {
+		setbands(data);
+	}, [data]);
+
+	const changeName = (ev, id) => {
+		const newName = ev.target.target;
+
+		setbands((bands) =>
+			bands.map((band) => {
+				if (band.id === id) {
+					band.name = newName;
+				}
+				return band;
+			})
+		);
+	};
+
+	const onLostFocus = () => {};
+
 	const generateRows = () => {
-		return (
-			<tr>
+		return bands.map((band) => (
+			<tr key={band.id}>
 				<td>
-					<button className="btn btn-primary"> +1 </button>
+					<button className="btn btn-primary" onClick={() => voteBand(band.id)}>
+						{' '}
+						+1{' '}
+					</button>
 				</td>
 				<td>
-					<input type="text" className="form-control" />
+					<input
+						type="text"
+						className="form-control"
+						value={band.name}
+						onChange={(ev) => changeName(ev, band.id)}
+						onBlur={() => onLostFocus(band.id, band.name)}
+					/>
 				</td>
 				<td>
-					<h3>5</h3>
+					<h3> {band.votes} </h3>
 				</td>
 				<td>
-					<button className="btn btn-danger"> Delete </button>
+					<button className="btn btn-danger" onClick={() => removeBand(band.id)}>
+						Delete
+					</button>
 				</td>
 			</tr>
-		);
+		));
 	};
 
 	return (
