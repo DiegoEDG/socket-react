@@ -1,11 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { SocketContext } from '../context/SocketContext';
 
-export const BandList = ({ data, voteBand, removeBand }) => {
-	const [bands, setbands] = useState(data);
+export const BandList = () => {
+	const [bands, setbands] = useState([]);
+	const { socket } = useContext(SocketContext);
 
 	useEffect(() => {
-		setbands(data);
-	}, [data]);
+		socket.on('bandList', (data) => {
+			setbands(data);
+		});
+	}, [socket]);
+
+	const voteBand = (id) => {
+		socket.emit('voteBand', id);
+	};
+
+	const removeBand = (id) => {
+		socket.emit('removeBand', id);
+	};
+
+	const addBand = (name) => {
+		console.log(name);
+		socket.emit('addBand', name);
+	};
 
 	const changeName = (ev, id) => {
 		const newName = ev.target.target;

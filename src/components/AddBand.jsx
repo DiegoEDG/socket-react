@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { SocketContext } from '../context/SocketContext';
 
-export const AddBand = ({ addBand }) => {
+export const AddBand = () => {
+	const { socket } = useContext(SocketContext);
 	const [value, setValue] = useState('');
 
 	const onSubmit = (ev) => {
 		ev.preventDefault();
 
 		if (value.length > 0) {
-			addBand(value);
+			socket.emit('addBand', value);
 			setValue('');
 		}
 	};
